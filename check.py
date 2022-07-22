@@ -266,6 +266,15 @@ def main(threads_no ):
 	# time = datetime.datetime.now()
 	creds = ""
 
+	# Check Proxies
+	files = os.listdir("proxy/")
+	file = files[0]
+	with open(f'proxy/{file}', "r") as f:
+		proxies = f.readlines()
+	if not proxies:
+		print("Proxy file is empty")
+		sys.exit()
+
 	# if int(time.day)<=30:
 	files = os.listdir("number/")
 	file = files[0]
@@ -274,6 +283,8 @@ def main(threads_no ):
 			n_found = f.readlines()
 	except:
 		pass
+
+	# File should be cleared since not found numbers is going to be rechecked
 	with open("results/not_found.txt", "w") as f:
 		f.write("")
 	try:
@@ -282,15 +293,13 @@ def main(threads_no ):
 	except:
 		pass
 
-	numbers = n_found+numbers		
+	numbers = n_found + numbers		
 	numbers = list(dict.fromkeys(numbers))
-	if len(numbers)==0:
-		print("No number is given")
+
+	if not numbers:
+		print("There is no number to lookup. Check 'number' directory")
 		sys.exit()
-	files = os.listdir("proxy/")
-	file = files[0]
-	with open(f'proxy/{file}', "r") as f:
-		proxies = f.readlines()
+
 	lock = multiprocessing.Lock()
 	# shared memory
 	try:
